@@ -25,7 +25,6 @@ RUN set -xe \
     && curl -sSL -o jib.zip https://github.com/GoogleContainerTools/jib/releases/download/v${JIB_CLI_VERSION}-cli/jib-jre-${JIB_CLI_VERSION}.zip \
     && unzip jib.zip  \
     && rm jib.zip \
-    && mv jib-${JIB_CLI_VERSION} /opt/jib \
-    && jib --version
+    && mv jib-${JIB_CLI_VERSION} /opt/jib
 
 USER $USER_ID
