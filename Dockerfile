@@ -1,5 +1,5 @@
 #simple jib-cli docker installation
-FROM openjdk:11-slim
+FROM openjdk:17-slim
 
 ARG USER_HOME_DIR="/tmp"
 ARG APP_DIR="/app"
