@@ -1,5 +1,5 @@
 #simple jib-cli docker installation
-FROM openjdk:17-slim
+FROM eclipse-temurin:17
 
 ARG USER_HOME_DIR="/tmp"
 ARG APP_DIR="/app"
