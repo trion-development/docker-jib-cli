@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -qqy --no-install-recommends \
     unzip \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ARG JIB_CLI_VERSION=0.11.0
+ARG JIB_CLI_VERSION=0.12.0
 LABEL jib-cli=$JIB_CLI_VERSION
 
 RUN set -xe \
