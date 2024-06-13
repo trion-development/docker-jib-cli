@@ -6,7 +6,7 @@ RUN apk add curl && curl -L ${QEMU_URL} | tar zxvf - -C . --strip-components 1
 
 
 #FROM arm32v7/openjdk:17-slim
-FROM eclipse-temurin:17
+FROM eclipse-temurin:21
 
 # Add QEMU
 COPY --from=builder qemu-arm-static /usr/bin
@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -qqy --no-install-recommends \
     unzip \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ARG JIB_CLI_VERSION=0.12.0
+ARG JIB_CLI_VERSION=0.13.0
 LABEL jib-cli=$JIB_CLI_VERSION
 
 RUN set -xe \
