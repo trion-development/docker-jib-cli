@@ -1,5 +1,5 @@
-#simple jib-cli docker installation
-FROM eclipse-temurin:21
+# Jib CLI docker image (multi-arch: amd64, arm64)
+FROM eclipse-temurin:21-jre
 
 ARG USER_HOME_DIR="/tmp"
 ARG APP_DIR="/app"
@@ -22,8 +22,8 @@ ARG JIB_CLI_VERSION=0.13.0
 LABEL jib-cli=$JIB_CLI_VERSION
 
 RUN set -xe \
-    && curl -sSL -o jib.zip https://github.com/GoogleContainerTools/jib/releases/download/v${JIB_CLI_VERSION}-cli/jib-jre-${JIB_CLI_VERSION}.zip \
-    && unzip jib.zip  \
+    && curl -fsSL -o jib.zip https://github.com/GoogleContainerTools/jib/releases/download/v${JIB_CLI_VERSION}-cli/jib-jre-${JIB_CLI_VERSION}.zip \
+    && unzip -q jib.zip \
     && rm jib.zip \
     && mv jib-${JIB_CLI_VERSION} /opt/jib
 

@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: '7 5 * * *'
   push:
+  pull_request:
+
+env:
+  DOCKER_IMAGE: trion/jib-cli
 
 jobs:
   docker:
@@ -13,34 +17,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Prepare
-        id: prep
+      - name: Read Jib CLI version
+        id: version
         run: |
-          DOCKER_IMAGE=trion/jib-cli
-          VERSION=latest
-          SHORTREF=${GITHUB_SHA::8}
-
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-
-          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
-          echo "docker_image=${DOCKER_IMAGE}" >> $GITHUB_OUTPUT
+          V=$(sed -nE 's/^ARG JIB_CLI_VERSION=(.*)/\1/p' Dockerfile)
+          echo "jib=${V}" >> "$GITHUB_OUTPUT"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
-        with:
-          platforms: all
 
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v4
-
-      - name: Cache Docker layers
-        uses: actions/cache@v5
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
 
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
@@ -52,11 +39,12 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v7
         with:
-          builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.prep.outputs.tags }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          push: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
+          tags: |
+            ${{ env.DOCKER_IMAGE }}:latest
+            ${{ env.DOCKER_IMAGE }}:${{ steps.version.outputs.jib }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
