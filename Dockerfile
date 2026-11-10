@@ -1,5 +1,5 @@
 # Jib CLI docker image (multi-arch: amd64, arm64)
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 
 ARG USER_HOME_DIR="/tmp"
 ARG APP_DIR="/app"
